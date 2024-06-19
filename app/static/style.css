@@ -1,0 +1,14 @@
+
+.mask-custom {
+    backdrop-filter: blur(5px);
+    background-color: rgba(131, 136, 143, 0.308);
+  }
+
+.index-section-top{
+  padding-top: 7%;
+  
+}
+
+.divider{
+  padding: 10%;
+}

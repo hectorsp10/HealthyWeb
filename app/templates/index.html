@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+    <section class="index-section-top py-[4.5rem] pb-5">
+        <div class="max-w-7xl mx-auto px-4 pt-4">
+            <h2 class="m-0 uppercase text-center tracking-widest text-base font-medium">CÓMO FUNCIONA</h2>
+            <h3 class="m-0 text-center mt-4 text-[1.6875rem] leading-[2.25rem] md:text-4xl font-normal">Cuéntanos tus objetivos.
+                <br><b class="whitespace-nowrap">Te ayudamos a alcanzarlos.</b>
+            </h3>
+        </div>
+    </section>
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <!-- Columnas que estarán en horizontal en pantallas medianas y mayores, y en vertical en pantallas pequeñas -->
+            <div class="col-md-4 col-sm-12">
+                <div class="p-3 mb-2 text-center">Columna 1</div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="p-3 mb-2 text-center">Columna 2</div>
+            </div>
+            <div class="col-md-4 col-sm-12">
+                <div class="p-3 mb-2 text-center">Columna 3</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <h2 class="heading">Personalizado significa hecho solo para ti</h2>
+            </div>
+            <div class="col-md-5">image</div>
+        </div>
+    </div>
+        
+{% endblock %}

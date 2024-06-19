@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, g
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
+#git commit -m "mensaje"
+
 app = Flask(__name__)
 database = 'healthy.db'
 
@@ -14,7 +16,7 @@ def get_db():
 
 @app.route('/')
 def index():
-    return render_template('layout.html')
+    return render_template('index.html')
 
 if __name__ == '_main_':
     app.run(debug=True)
