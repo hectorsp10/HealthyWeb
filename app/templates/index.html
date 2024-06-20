@@ -17,13 +17,16 @@
         <div class="row justify-content-center align-items-center">
             <!-- Columnas que estarán en horizontal en pantallas medianas y mayores, y en vertical en pantallas pequeñas -->
             <div class="col-md-4 col-sm-12">
-                <div class="p-3 mb-2 text-center">Columna 1</div>
+                
+                <div class="p-3 mb-2 text-center">Rellena nuestro formulario para conocer tus requerimientos</div>
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="p-3 mb-2 text-center">Columna 2</div>
+                <div class="p-3 mb-2 text-center">Organiza y crea tus recetas</div>
             </div>
             <div class="col-md-4 col-sm-12">
                 <div class="p-3 mb-2 text-center">Columna 3</div>
+                <div class="p-3 mb-2 text-center">Mantente feliz, sano y en forma</div>
             </div>
         </div>
 
@@ -33,7 +36,32 @@
             <div class="col-md-7">
                 <h2 class="heading">Personalizado significa hecho solo para ti</h2>
             </div>
-            <div class="col-md-5">image</div>
+            <div class="col-md-5">
+                <div class="p-3 mb-2 text-center">
+                    <img src="{{ url_for('static', filename='images/IndexImage1.png') }}" alt="Ejemplo de imagen" width="550" height="550"></img>
+                </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-md-5">
+                <img src="{{ url_for('static', filename='images/IndexImage3.png') }}" alt="Ejemplo de imagen" width="550" height="550">
+            </div>
+            <div class="col-md-7">
+                <h2 class="heading">Personalizado significa hecho solo para ti</h2>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-md-7">
+                <h2 class="heading">Personalizado significa hecho solo para ti</h2>
+            </div>
+            <div class="col-md-5">
+                <img src="{{ url_for('static', filename='images/IndexImage2.png') }}" alt="Ejemplo de imagen" width="550" height="550">
+            </div>
         </div>
     </div>
         
