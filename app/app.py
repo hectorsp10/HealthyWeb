@@ -18,5 +18,27 @@ def get_db():
 def index():
     return render_template('index.html')
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        if not request.form.get("username"):
+            return render_template("register.html")
+        
+        elif not request.form.get("password"):
+            return render_template("register.html")
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+        comfirmation = request.form.get("comfirmation")
+
+        if password:
+            if password == comfirmation:
+                passwordHash = generate_password_hash(password)
+                
+                # query database to check if passwordHash exists
+
+    else:
+        return render_template("register.html")
+
 if __name__ == '_main_':
     app.run(debug=True)

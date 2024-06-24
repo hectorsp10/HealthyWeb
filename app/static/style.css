@@ -1,4 +1,8 @@
 
+.title{
+  font-size: 120%;
+}
+
 .mask-custom {
     backdrop-filter: blur(5px);
     background-color: rgba(255, 255, 255, 0.589);
@@ -9,6 +13,67 @@
   
 }
 
+.third-section{
+  padding-top: 5%;
+}
+
 .divider{
   padding: 10%;
+}
+
+.divider-2{
+  padding: 2%;
+}
+
+.heading{
+  text-align: center;
+}
+
+.sm-text{
+  font-size: 120%;
+}
+
+.section-btn-register{
+  padding-top: 10%;
+  padding-bottom: 10%;
+  text-align: center;
+}
+
+.btn-register{
+  font-size: 200%;
+}
+
+.register-form{
+  background-color: rgb(255, 255, 255);
+  border-radius: 7%;
+  padding-top: 15%;
+  padding-bottom: 15%;
+  text-align: center;
+  align-items: center;
+}
+
+.register-container{
+  background-image: url('images/FondoRegata.jpg');
+  background-size: cover;
+  padding-top: 12%;
+  padding-left: 37%;
+  padding-right: 37%;
+  padding-bottom: 8%;
+}
+
+.registered{
+  padding-top: 8%;
+}
+
+/*Ajuste de tamaño para el formulario*/
+@media (max-width: 900px) {
+  .register-container {
+      padding: 200px; /* Ajustar el espacio interno en pantallas pequeñas */
+  }
+}
+
+@media (max-width: 650px) {
+  .register-container {
+      padding: 50px; /* Ajustar el espacio interno en pantallas muy pequeñas */
+  }
 }

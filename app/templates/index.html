@@ -6,6 +6,22 @@
 
 {% block main %}
     <section class="index-section-top py-[4.5rem] pb-5">
+        <div class="container">
+            <div class="row justify-content-center align-items-center">
+                <div class="col-md-7 col-sm-12 px-5">
+                    <h1 class="m-0 max-w-xl font-medium">Gana o pierde peso de forma saludable y sin hambre</h1>
+                    <h2 class="mt-5 max-w-lg">Nuestra web te ayuda a cumplir tus objetivos</h2>
+                    <p class="sm-text pt-4">Regístrate y accede a todo nuestro contenido</p>
+                </div>
+                <div class="col-md-5">
+                    <div class="p-3 mb-2 text-center">
+                        <img src="{{ url_for('static', filename='images/HealthyImage1.jpg') }}" alt="Ejemplo de imagen" class="img-fluid"></img>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="second-section">
         <div class="max-w-7xl mx-auto px-4 pt-4">
             <h2 class="m-0 uppercase text-center tracking-widest text-base font-medium">CÓMO FUNCIONA</h2>
             <h3 class="m-0 text-center mt-4 text-[1.6875rem] leading-[2.25rem] md:text-4xl font-normal">Cuéntanos tus objetivos.
@@ -14,7 +30,7 @@
         </div>
     </section>
     <div class="container">
-        <div class="row justify-content-center align-items-center">
+        <div class="third-section row justify-content-center align-items-center">
             <!-- Columnas que estarán en horizontal en pantallas medianas y mayores, y en vertical en pantallas pequeñas -->
             <div class="col-md-4 col-sm-12">
                 
@@ -32,37 +48,41 @@
 
         <div class="divider"></div>
 
-        <div class="row">
-            <div class="col-md-7">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 col-12 ">
                 <h2 class="heading">Personalizado significa hecho solo para ti</h2>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6 col-12">
                 <div class="p-3 mb-2 text-center">
-                    <img src="{{ url_for('static', filename='images/IndexImage1.png') }}" alt="Ejemplo de imagen" width="550" height="550"></img>
+                    <img src="{{ url_for('static', filename='images/IndexImage1.png') }}" alt="Ejemplo de imagen" class="img-fluid"></img>
                 </div>
+            </div>
         </div>
 
-        <div class="divider"></div>
+        <div class="divider-2"></div>
 
-        <div class="row">
-            <div class="col-md-5">
-                <img src="{{ url_for('static', filename='images/IndexImage3.png') }}" alt="Ejemplo de imagen" width="550" height="550">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 col-12">
+                <img src="{{ url_for('static', filename='images/IndexImage3.png') }}" alt="Ejemplo de imagen" class="img-fluid"></img>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6 col-12">
                 <h2 class="heading">Personalizado significa hecho solo para ti</h2>
             </div>
         </div>
 
-        <div class="divider"></div>
+        <div class="divider-2"></div>
 
-        <div class="row">
-            <div class="col-md-7">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 col-sm-12">
                 <h2 class="heading">Personalizado significa hecho solo para ti</h2>
             </div>
-            <div class="col-md-5">
-                <img src="{{ url_for('static', filename='images/IndexImage2.png') }}" alt="Ejemplo de imagen" width="550" height="550">
+            <div class="col-md-6 col-sm-12">
+                <img src="{{ url_for('static', filename='images/IndexImage2.png') }}" alt="Ejemplo de imagen" class="img-fluid">
             </div>
         </div>
+        <section class="section-btn-register">
+            <a class="btn-register btn btn-success align-items-center" href="/register">Apúntate hoy</a>
+        </section>
     </div>
         
 {% endblock %}
