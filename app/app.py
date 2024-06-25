@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, flash
+from flask import Flask, render_template, request, g, flash, session
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -27,6 +27,58 @@ def close_connection(exception):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return render_template("index.html")
+
+@app.route("/login", methods = ["GET", "POST"])
+def login():
+
+    session.clear()
+    username = request.form.get("username")
+    password = request.form.get("password")
+    
+    if request.method == "POST":
+
+        if not request.form.get("username"):
+            flash('please provide username')
+            return render_template("login.html")
+        
+        elif not request.form.get("password"):
+            flash('please provide password')
+            return render_template("login.html")
+        
+        #query database for username
+        db=get_db()
+        cursor = db.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = cursor.fetchall()
+
+        #if the userusername introduced does not match with any registered user
+        if len(user) != 1:
+            flash('invalid username')
+            return render_template("login.html")
+        
+        if not check_password_hash(user[0]["hash"], password):
+            flash('invalid password')
+            return render_template("login.html")
+    
+        #remember the user during the session
+        session["user_id"] = user[0]["id"]
+        session["user_name"] = user[0]["username"]
+        userName = session["user_name"]
+        #redirect user to homepage
+        return render_template("home.html", user=userName)
+
+    else:
+        return render_template("login.html")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -73,13 +125,16 @@ def register():
                         cursor.execute("INSERT INTO users (username, email, hash) VALUES (?, ?, ?)", (username, email, passwordHash))
                         db.commit()
                         flash('Registered succesfully!')
-                        return render_template("register.html")
+                        return render_template("login.html")
                     else:
                         flash('Username already exists')
+                        return render_template("register.html")
                 else:
                     flash('email already exists')
+                    return render_template("register.html")
             else:
                 flash('Password already exists')
+                return render_template("register.html")
         else:
             flash('Passwords do not match')
             return render_template("register.html")
@@ -87,17 +142,6 @@ def register():
     else:
         return render_template("register.html")
 
-
-@app.route('/test_insert')
-def test_insert():
-    try:
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute("INSERT INTO users (username, hash) VALUES ('test_user', 'test_hash')")
-        db.commit()
-        return "Inserted test user."
-    except Exception as e:
-        return f"An error occurred: {e}"
 
 if __name__ == '__main__':
     app.run(debug=True)

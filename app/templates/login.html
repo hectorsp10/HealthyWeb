@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Register
+    Login
 {% endblock %}
 
 {% block main %}
@@ -10,7 +10,7 @@
 
     <div class="register-container">
         <section class="">
-            <form action="/register" method="post" class="register-form">
+            <form action="/login" method="post" class="register-form">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         <ul class="flashes">
@@ -20,22 +20,16 @@
                         </ul>
                     {% endif %}
                 {% endwith %}
-                <h1 class="pb-3">Register</h1>
+                <h1 class="pb-3">Login</h1>
                 <div class="mb-3">
                     <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
                 </div>
                 <div class="mb-3">
-                    <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="email" placeholder="E-mail" type="text">
-                </div>
-                <div class="mb-3">
                     <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
                 </div>
-                <div class="mb-3 pb-4">
-                    <input class="form-control mx-auto w-auto" name="confirmation" placeholder="Confirm Password" type="password">
-                </div>
                 <button class="btn btn-success" type="submit">Register</button>
-                <p class="registered">¿Are you already registered?</p>
-                <a class="btn btn-dark" href="/login">log in</a>
+                <p class="registered">Are you not member yet?</p>
+                <a class="btn btn-dark" href="/register">Register</a>
             </form>
         </section>
     </div>

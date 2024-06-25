@@ -18,20 +18,28 @@
     </head>
 
     <body>
-
-        <nav class="navbar navbar-expand-lg navbar-light fixed-top mask-custom shadow-0">
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top mask-custom border-bottom shadow-0">
             <div class="container">
-                <a class="navbar-brand" href="/"><span class="title black">Healthy app</span></a>
-                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar">
+            {% if session["user_id"] %}
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav flex-grow-1 justify-content-between">
+                        <li class="nav-item"><a class="navbar-brand" href="/"><span class="title black">Healthy app</span></a></li>
+                        <li class="nav-item"><h5 class="font-weight-normal">{{ user }}</h5></li>
 
+                        <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                    </ul>
                 </div>
+            {% else %}
+                <div class="offcanvas-body">
+                    <a class="navbar-brand" href="/"><span class="title black">Healthy app</span></a>
+                    <ul class="navbar-nav flex-grow-1 justify-content-between"></ul>
+                        
+                        <a class="nav-link" href="/login">login</a>
+                    </ul> 
+                </div>
+            {% endif %}
             </div>
         </nav>
-
-        
         {% block main %}{% endblock %}
         
     </body>
