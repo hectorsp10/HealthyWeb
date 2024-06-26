@@ -5,10 +5,49 @@
 {% endblock %}
 
 {% block main %}
-    <section class="index-section-top py-[4.5rem] pb-5">
-        <div class="container">
-            <h1>Welcome</h1>
-        </div>
-    </section>
+    <div class="home_container container">
+        {% if weight and height %}
+            <p>weight: {{ weight }}kg</p>
+            <p>height: {{ height }}cm</p>
+            <p>base caloric intake: {{ base_cal_intake }}kcal</p>
+        {% else %}
+            <section class="home-data-explanation">
+                <p>In order to know your needs, we need to ask you for some data</p>
+            </section>
+            <form action="/update" method="post" class="home-form">
+                <div class="form-group pb-3">
+                    <label for="weight">Weight (kg):</label>
+                    <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
+                </div>
+                <div class="form-group pb-3">
+                    <label for="height">Height (cm):</label>
+                    <input type="number" step="1" class="form-control" id="height" name="height" required>
+                </div>
+                <div class="form-group pb-3">
+                    <label for="gender">gender:</label>
+                    <select class="form-control" id="gender" name="gender" required>
+                        <option value="" disabled selected>Select your gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group pb-5">
+                    <label for="age">age:</label>
+                    <input type="number" step="1" class="form-control" id="age" name="age" required>
+                </div>
+                <div class="form-group pb-3">
+                    <label for="activity">Activity level:</label>
+                    <select class="form-control" id="activity" name="activity" required>
+                        <option value="" disabled selected>Select your level of activity</option>
+                        <option value="1">Sedentary. Office job and no exercise during the day</option>
+                        <option value="2">Slightly active. Office job, 1/2 days of exercise per week and or walking half an hour a day</option>
+                        <option value="3">Moderately active. Standing job and 1/2 days of exercise or office job and 4/5 workouts a week</option>
+                        <option value="4">Very active. Standing job plus 4/5 days of intense exercise or office job plus 5+ days of intense workout per week and usual walking</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% endif %}
+    </div>
         
 {% endblock %}

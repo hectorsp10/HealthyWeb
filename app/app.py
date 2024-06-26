@@ -142,6 +142,63 @@ def register():
     else:
         return render_template("register.html")
 
+@app.route("/home")
+def home():
+
+    # query database to know if the current user has already entered their data (height, weight, age, gender, activity_level)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT weight, height, age, gender, activity_level FROM user_stats WHERE user_id = ?", (session['user_id'],))
+    user_data = cursor.fetchone()
+
+    # if the user has introduced their data
+    if user_data:
+        #weight = user_data[0]["weight"]
+        #height = user_data[0]["height"]
+        #age = user_data[0]["age"]
+        #gender = user_data[0]["gender"]
+
+        weight, height, age, gender, activity_level = user_data
+
+        print("encuentra los datos del usuario en la base")
+
+        # calory intake calculation
+        if gender == 1: # (male)
+            base_cal_intake = 66 + (13.75 * weight) + (5 * height) - (6.75 * age)
+
+        if gender == 2: # (feale)
+            base_cal_intake = 655 + (9.56 * weight) + (1.85 * height) - (4.68 * age)
+
+        return render_template('home.html', base_cal_intake=base_cal_intake, height=height, weight=weight)
+        #return render_template('index.html')
+
+    else:
+        return render_template('home.html', weight=None, height=None)
+    
+@app.route("/update", methods =['POST'])
+def update():
+
+    weight = request.form.get('weight')
+    height = request.form.get('height')
+    age = request.form.get('age')
+    gender = request.form.get('gender')
+    activity = request.form.get('activity')
+
+    db = get_db()
+    cursor = db.cursor()
+    
+    cursor.execute("SELECT * FROM user_stats WHERE user_id=?", (session['user_id'],))
+    user = cursor.fetchone()
+
+    if not user:
+        
+        cursor.execute("INSERT INTO user_stats (user_id, weight, height, age, gender, activity_level) VALUES (?, ?, ?, ?, ?, ?)", (session['user_id'], weight, height, age, gender, activity,))
+    else:
+        cursor.execute("UPDATE user_stats SET weight = ?, height = ?, age = ?, gender = ?, activity_level = ? WHERE user_id = ?", (weight, height, age, gender, activity, session['user_id']))
+
+    print("sube los datos del usuario en la base")
+    return render_template("home.html")
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
