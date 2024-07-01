@@ -161,10 +161,6 @@ def home():
 
     # if the user has introduced their data
     if user_data:
-        #weight = user_data[0]["weight"]
-        #height = user_data[0]["height"]
-        #age = user_data[0]["age"]
-        #gender = user_data[0]["gender"]
 
         weight, height, age, gender, activity_level = user_data
 

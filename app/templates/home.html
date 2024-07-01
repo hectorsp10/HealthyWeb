@@ -42,16 +42,28 @@
             };
     
             const createCalendar = () => {
+                
                 const calendar = document.getElementById('calendar');
                 calendar.innerHTML = '';
                 userEntries.forEach(entry => {
                     const dayCard = document.createElement('div');
                     dayCard.className = 'day-card';
+                    
+                    let cardTitle = entry.day;
+                    // Verificar si la fecha de la tarjeta es hoy
+                    if (entry.day.isSame(today, 'day')) {
+                        dayCard.classList.add('today');
+                        cardTitle = 'today';
+                    }
+                    else {
+                        cardTitle = entry.day.format('DD-MM');
+                    }
+
                     dayCard.innerHTML = `
-                        <h5>${entry.day}</h5>
-                        <div class="events" id="events-${entry.day}">${entry.event}</div>
-                        <input type="text" id="event-input-${entry.day}" class="form-control mt-2" placeholder="Add event">
-                        <button onclick="addEvent(${entry.day})" class="btn btn-primary btn-sm mt-2">Add</button>
+                        <h5>${cardTitle}</h5>
+                        <div class="events" id="events-${entry.day.format('MM-DD')}"></div>
+                        <input type="text" id="event-input-${entry.day.format('MM-DD')}" class="form-control mt-2" placeholder="Add event">
+                        <button onclick="addEvent('${entry.day.format('MM-DD')}')" class="btn btn-primary btn-sm mt-2">Add</button>
                     `;
                     calendar.appendChild(dayCard);
                 });
@@ -60,14 +72,10 @@
             
     
             const addNewCard = () => {
-                const cards = document.querySelectorAll('.day-card');
-                
                 const nextDay = moment(today).add(i, 'days');
-                userEntries.push({ day: nextDay.format('DD-MM'), event: "" });
-
-                i=i+1;
-
-                createCalendar();
+                userEntries.push({ day: nextDay});
+                i++;
+            createCalendar();
             };
     
             createCalendar();
