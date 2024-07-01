@@ -78,10 +78,52 @@
   }
 }
 
-.home_container{
+.home_container_form{
   padding-top: 10%;
+}
+
+.home_container{
+  padding-top: 3.5%;
 }
 
 .home-form{
   padding-right: 20%;
+}
+
+.calendar {
+  display: flex;
+  overflow-x: auto; /* Permite el desplazamiento horizontal */
+}
+
+/* Estilo para cada tarjeta de día */
+.day-card {
+  flex: 0 0 auto; /* Evita que las tarjetas se flexionen y mantienen su tamaño fijo */
+  width: 200px; /* Ancho fijo de cada tarjeta */
+  height: auto; /* Altura automática según el contenido */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-right: 10px; /* Espacio entre tarjetas */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.events {
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* Personalización de la barra de desplazamiento para navegadores WebKit */
+.calendar::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de desplazamiento */
+  height: 12px; /* Altura de la barra de desplazamiento horizontal */
+}
+.calendar::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 10px;
+}
+.calendar::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 10px;
+}
+.calendar::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

@@ -4,13 +4,79 @@
     Home {{user}}
 {% endblock %}
 
+
 {% block main %}
+    {% if weight and height %}
     <div class="home_container container">
-        {% if weight and height %}
-            <p>weight: {{ weight }}kg</p>
-            <p>height: {{ height }}cm</p>
-            <p>base caloric intake: {{ base_cal_intake }}kcal</p>
-        {% else %}
+        <section>
+            <div class="row">
+                <div class="col"><p>weight: {{ weight }}kg</p></div>
+                <div class="col"><p>height: {{ height }}cm</p></div>
+                <div class="col"><p>base caloric intake: {{ base_cal_intake }}kcal</p></div>
+                
+            </div>
+        </section>
+        <div class="container mt-5">
+            <div id="calendar" class="calendar"></div>
+            <button class="btn btn-primary mt-3" onclick="addNewCard()">Add New Card</button>
+        </div>
+
+        <script>
+
+            var today = moment();
+            var i=0;
+
+            const userEntries = [
+                // Añade más entradas según sea necesario
+            ];
+    
+            const addEvent = (day) => {
+                const eventText = document.getElementById(`event-input-${day}`).value;
+                const eventsList = document.getElementById(`events-${day}`);
+                if (eventText) {
+                    const eventItem = document.createElement('div');
+                    eventItem.textContent = eventText;
+                    eventsList.appendChild(eventItem);
+                    document.getElementById(`event-input-${day}`).value = '';
+                }
+            };
+    
+            const createCalendar = () => {
+                const calendar = document.getElementById('calendar');
+                calendar.innerHTML = '';
+                userEntries.forEach(entry => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'day-card';
+                    dayCard.innerHTML = `
+                        <h5>${entry.day}</h5>
+                        <div class="events" id="events-${entry.day}">${entry.event}</div>
+                        <input type="text" id="event-input-${entry.day}" class="form-control mt-2" placeholder="Add event">
+                        <button onclick="addEvent(${entry.day})" class="btn btn-primary btn-sm mt-2">Add</button>
+                    `;
+                    calendar.appendChild(dayCard);
+                });
+            };
+
+            
+    
+            const addNewCard = () => {
+                const cards = document.querySelectorAll('.day-card');
+                
+                const nextDay = moment(today).add(i, 'days');
+                userEntries.push({ day: nextDay.format('DD-MM'), event: "" });
+
+                i=i+1;
+
+                createCalendar();
+            };
+    
+            createCalendar();
+        </script>
+        
+    </div>
+    {% else %}
+    <div class="home_container_form container">
+        
             <section class="home-data-explanation">
                 <p>In order to know your needs, we need to ask you for some data</p>
             </section>

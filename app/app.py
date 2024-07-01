@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, flash, session
+from flask import Flask, render_template, request, g, flash, session, redirect, url_for
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -44,6 +44,8 @@ def login():
     session.clear()
     username = request.form.get("username")
     password = request.form.get("password")
+
+    print(username)
     
     if request.method == "POST":
 
@@ -71,11 +73,12 @@ def login():
             return render_template("login.html")
     
         #remember the user during the session
-        session["user_id"] = user[0]["id"]
-        session["user_name"] = user[0]["username"]
-        userName = session["user_name"]
+        session['user_id'] = user[0]['id']
+        session['user_name'] = user[0]['username']
+        userName = session['user_name']
         #redirect user to homepage
-        return render_template("home.html", user=userName)
+        #return render_template("home.html", user=userName)
+        return redirect(url_for('home', user=userName))
 
     else:
         return render_template("login.html")
@@ -142,14 +145,19 @@ def register():
     else:
         return render_template("register.html")
 
-@app.route("/home")
+@app.route('/home')
 def home():
+
+    if 'user_id' not in session:
+        print("user not logged in.")
+        return render_template('login.html')
 
     # query database to know if the current user has already entered their data (height, weight, age, gender, activity_level)
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT weight, height, age, gender, activity_level FROM user_stats WHERE user_id = ?", (session['user_id'],))
     user_data = cursor.fetchone()
+    print("busca los datos del usuario en la base")
 
     # if the user has introduced their data
     if user_data:
@@ -163,19 +171,19 @@ def home():
         print("encuentra los datos del usuario en la base")
 
         # calory intake calculation
-        if gender == 1: # (male)
+        if gender == 'male': # (male)
             base_cal_intake = 66 + (13.75 * weight) + (5 * height) - (6.75 * age)
 
-        if gender == 2: # (feale)
+        if gender == 'female': # (feale)
             base_cal_intake = 655 + (9.56 * weight) + (1.85 * height) - (4.68 * age)
 
-        return render_template('home.html', base_cal_intake=base_cal_intake, height=height, weight=weight)
-        #return render_template('index.html')
+        return render_template('home.html', user=session["user_name"], base_cal_intake=base_cal_intake, height=height, weight=weight)
 
     else:
-        return render_template('home.html', weight=None, height=None)
+        print("NO encuentra los datos del usuario en la base")
+        return render_template('home.html', user=session['user_name'], weight=None, height=None)
     
-@app.route("/update", methods =['POST'])
+@app.route("/update", methods=['POST'])
 def update():
 
     weight = request.form.get('weight')
@@ -184,20 +192,27 @@ def update():
     gender = request.form.get('gender')
     activity = request.form.get('activity')
 
+
     db = get_db()
     cursor = db.cursor()
-    
     cursor.execute("SELECT * FROM user_stats WHERE user_id=?", (session['user_id'],))
-    user = cursor.fetchone()
+    user = cursor.fetchall()
+
+    print(weight, height, age, gender, activity)
 
     if not user:
-        
         cursor.execute("INSERT INTO user_stats (user_id, weight, height, age, gender, activity_level) VALUES (?, ?, ?, ?, ?, ?)", (session['user_id'], weight, height, age, gender, activity,))
+        db.commit()
+        print("crea los datos del usuario en la base")
+        return redirect(url_for('home', user=session['user_name']))
     else:
         cursor.execute("UPDATE user_stats SET weight = ?, height = ?, age = ?, gender = ?, activity_level = ? WHERE user_id = ?", (weight, height, age, gender, activity, session['user_id']))
+        db.commit()
+        print("sobreescribe los datos del usuario en la base")
+        return render_template("home.html", user=session['user_name'])
 
-    print("sube los datos del usuario en la base")
-    return render_template("home.html")
+    
+    
     
 
 if __name__ == '__main__':
