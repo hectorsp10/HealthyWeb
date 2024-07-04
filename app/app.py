@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, g, flash, session, redirect, url_for
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
 #git commit -m "mensaje"
 
@@ -151,6 +152,9 @@ def home():
     if 'user_id' not in session:
         print("user not logged in.")
         return render_template('login.html')
+    
+    # determinamos la fecha actual
+    current_date = datetime.now().strftime('%m-%d')
 
     # query database to know if the current user has already entered their data (height, weight, age, gender, activity_level)
     db = get_db()
@@ -159,13 +163,14 @@ def home():
     user_data = cursor.fetchone()
     print("busca los datos del usuario en la base")
 
-    cursor.execute("SELECT id, day FROM cards WHERE user_id = ?", (session['user_id'],))
+    # We only want to show the cards whose date hasn't passed yet
+    cursor.execute("SELECT id, day FROM cards WHERE user_id = ? AND day >= ?", (session['user_id'], current_date))
     cards = cursor.fetchall()
 
     cursor.execute("SELECT id, name FROM recipes WHERE user_id = ?", (session['user_id'],))
-    cards = cursor.fetchall()
+    recipes = cursor.fetchall()
 
-    cards = [(card['id'], card['day']) for card in cards]
+    #cards = [(card['id'], card['day']) for card in cards]
 
     # if the user has introduced their data
     if user_data:
@@ -181,7 +186,7 @@ def home():
         if gender == 'female': # (female)
             base_cal_intake = 655 + (9.56 * weight) + (1.85 * height) - (4.68 * age)
 
-        return render_template('home.html', user=session["user_name"], base_cal_intake=base_cal_intake, height=height, weight=weight)
+        return render_template('home.html', user=session["user_name"], base_cal_intake=base_cal_intake, height=height, weight=weight, cards=cards, recipes=recipes, current_date=current_date)
 
     else:
         print("NO encuentra los datos del usuario en la base")
@@ -225,7 +230,7 @@ def create_card():
 
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO cards (user_id, day) VALUES (?, ?)", user_id, day)
+    cursor.execute("INSERT INTO cards (user_id, day) VALUES (?, ?)", (user_id, day))
     db.commit()
 
     return redirect(url_for('home'))
@@ -240,6 +245,8 @@ def add_recipe_to_card():
     cursor = db.cursor()
     cursor.execute("INSERT INTO card_recipes (card_id, recipe_id) VALUES (?, ?)", (card_id, recipe_id))
     db.commit()
+
+    return redirect
     
 
 if __name__ == '__main__':
