@@ -159,6 +159,14 @@ def home():
     user_data = cursor.fetchone()
     print("busca los datos del usuario en la base")
 
+    cursor.execute("SELECT id, day FROM cards WHERE user_id = ?", (session['user_id'],))
+    cards = cursor.fetchall()
+
+    cursor.execute("SELECT id, name FROM recipes WHERE user_id = ?", (session['user_id'],))
+    cards = cursor.fetchall()
+
+    cards = [(card['id'], card['day']) for card in cards]
+
     # if the user has introduced their data
     if user_data:
 
@@ -170,7 +178,7 @@ def home():
         if gender == 'male': # (male)
             base_cal_intake = 66 + (13.75 * weight) + (5 * height) - (6.75 * age)
 
-        if gender == 'female': # (feale)
+        if gender == 'female': # (female)
             base_cal_intake = 655 + (9.56 * weight) + (1.85 * height) - (4.68 * age)
 
         return render_template('home.html', user=session["user_name"], base_cal_intake=base_cal_intake, height=height, weight=weight)
@@ -179,6 +187,7 @@ def home():
         print("NO encuentra los datos del usuario en la base")
         return render_template('home.html', user=session['user_name'], weight=None, height=None)
     
+
 @app.route("/update", methods=['POST'])
 def update():
 
@@ -208,7 +217,29 @@ def update():
         return render_template("home.html", user=session['user_name'])
 
     
-    
+@app.route("/create_card", methods=['POST'])
+def create_card():
+
+    user_id = session['user_id']
+    day = request.form['day']
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO cards (user_id, day) VALUES (?, ?)", user_id, day)
+    db.commit()
+
+    return redirect(url_for('home'))
+
+@app.route("/add_recipe_to_card", methods=['POST'])
+def add_recipe_to_card():
+
+    card_id = request.form['card_id']
+    recipe_id = request.form['recipe_id']
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO card_recipes (card_id, recipe_id) VALUES (?, ?)", (card_id, recipe_id))
+    db.commit()
     
 
 if __name__ == '__main__':

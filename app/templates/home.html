@@ -17,8 +17,27 @@
             </div>
         </section>
         <div class="container mt-5">
-            <div id="calendar" class="calendar"></div>
-            <button class="btn btn-primary mt-3" onclick="addNewCard()">Add New Card</button>
+            <div id="calendar" class="calendar">
+                {% for card in cards %}
+                <div class="day-card">
+                    <h5>{{ 'Today' if card[0] == today else card[0] }}</h5>
+                    <!-- Formulario para añadir recetas a la tarjeta -->
+                    <form action="/add_recipe_to_card" method="POST" class="add-recipe-form">
+                        <select name="recipe_id" class="form-control mt-2">
+                            {% for recipe in recipes %}
+                            <option value="{{ recipe.id }}">{{ recipe.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" name="card_id" value="{{ card.id }}">
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Add Recipe</button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <form id="addCardForm" action="/create_card" method="POST" class="add-card-form">
+                <input type="hidden" name="day" value="">
+                <button type="submit" class="btn btn-primary mt-3">Add New Card</button>
+            </form>
         </div>
 
         <script>
@@ -29,17 +48,6 @@
             const userEntries = [
                 // Añade más entradas según sea necesario
             ];
-    
-            const addEvent = (day) => {
-                const eventText = document.getElementById(`event-input-${day}`).value;
-                const eventsList = document.getElementById(`events-${day}`);
-                if (eventText) {
-                    const eventItem = document.createElement('div');
-                    eventItem.textContent = eventText;
-                    eventsList.appendChild(eventItem);
-                    document.getElementById(`event-input-${day}`).value = '';
-                }
-            };
     
             const createCalendar = () => {
                 
@@ -63,7 +71,8 @@
                         <h5>${cardTitle}</h5>
                         <div class="events" id="events-${entry.day.format('MM-DD')}"></div>
                         <input type="text" id="event-input-${entry.day.format('MM-DD')}" class="form-control mt-2" placeholder="Add event">
-                        <button onclick="addEvent('${entry.day.format('MM-DD')}')" class="btn btn-primary btn-sm mt-2">Add</button>
+                        <input type="hidden" name="day" value="">
+                        <button type="button" class="btn btn-primary mt-3" onclick="submitForm()">Add New Card</button>
                     `;
                     calendar.appendChild(dayCard);
                 });
@@ -71,14 +80,21 @@
 
             
     
-            const addNewCard = () => {
+            // Actualizar el valor del campo hidden "day" del formulario
+            const updateDayInput = () => {
                 const nextDay = moment(today).add(i, 'days');
-                userEntries.push({ day: nextDay});
+                document.querySelector('input[name="day"]').value = nextDay.format('MM-DD');
                 i++;
-            createCalendar();
             };
-    
-            createCalendar();
+
+            // Llamar a updateDayInput cuando la página se cargue
+            document.addEventListener('DOMContentLoaded', updateDayInput);
+
+            // Función para enviar el formulario
+            const submitForm = () => {
+                updateDayInput();
+                document.getElementById('addCardForm').submit();
+            };
         </script>
         
     </div>
