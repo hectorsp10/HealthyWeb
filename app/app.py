@@ -29,6 +29,11 @@ def close_connection(exception):
 def index():
     return render_template('index.html')
 
+@app.route('/recipes')
+def recipes():
+    userName = session['user_name']
+    return render_template('recipes.html', user=userName)
+
 @app.route("/logout")
 def logout():
     """Log user out"""
