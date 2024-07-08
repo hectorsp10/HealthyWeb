@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, g, flash, session, redirect, url_for
+from flask import Flask, render_template, request, g, flash, session, redirect, url_for, jsonify
 import sqlite3
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
@@ -253,6 +253,47 @@ def add_recipe_to_card():
 
     return redirect
     
+@app.route("/ingredients")
+def ingredients():
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT id, name FROM ingredients")
+    ingredients = cursor.fetchall()
+
+    return jsonify([dict(ix) for ix in ingredients])
+
+@app.route("/create_recipe", methods=['GET', 'POST'])
+def create_recipe():
+    if request.method == 'POST':
+        selected_ingredients = request.form.getlist('ingredient_id[]')
+        quantities = request.form.getlist('quantity[]')
+
+        user_id = session['user_id']
+
+        db = get_db()
+        cursor = db.cursor()
+
+        total_calories = 0
+        total_carbs = 0
+        total_protein = 0
+        total_fat = 0
+
+        for ingredient_id, quantity in zip(selected_ingredients, quantities):
+            cursor.execute("SELECT calories, carbs, protein, fat FROM ingredients WHERE id = ?", (ingredient_id,))
+            ingredient_data = cursor.fetchone()
+
+            if ingredient_data:
+                calories, carbs, protein, fat = ingredient_data
+                quantity = float(quantity) # Ensure the quantity is a float for accurate calculations
+
+                total_calories = total_calories + ((calories/100) + quantity)
+                total_carbs = total_carbs + ((carbs/100) + quantity)
+                total_protein = total_protein + ((protein/100) + quantity)
+                total_fat = total_fat + ((fat/100) + quantity)
+
+
+        cursor.execute("INSERT INTO recipes (user_id, name, meal_type, total_calories, total_carbs, total_protein, total_fat) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id,))
+        db.commit()
 
 if __name__ == '__main__':
     app.run(debug=True)
