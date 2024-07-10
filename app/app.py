@@ -28,11 +28,7 @@ def close_connection(exception):
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/recipes')
-def recipes():
-    userName = session['user_name']
-    return render_template('recipes.html', user=userName)
+    
 
 @app.route("/logout")
 def logout():
@@ -265,8 +261,11 @@ def ingredients():
 @app.route("/create_recipe", methods=['GET', 'POST'])
 def create_recipe():
     if request.method == 'POST':
+        recipe_name = request.form.get('recipe_name')
+        meal_type = request.form.get('meal_type')
         selected_ingredients = request.form.getlist('ingredient_id[]')
         quantities = request.form.getlist('quantity[]')
+        quantities = [float(quantity) for quantity in quantities if quantity.strip()]  # strip() elimina espacios en blanco al inicio y final
 
         user_id = session['user_id']
 
@@ -284,7 +283,7 @@ def create_recipe():
 
             if ingredient_data:
                 calories, carbs, protein, fat = ingredient_data
-                quantity = float(quantity) # Ensure the quantity is a float for accurate calculations
+                
 
                 total_calories = total_calories + ((calories/100) + quantity)
                 total_carbs = total_carbs + ((carbs/100) + quantity)
@@ -292,8 +291,36 @@ def create_recipe():
                 total_fat = total_fat + ((fat/100) + quantity)
 
 
-        cursor.execute("INSERT INTO recipes (user_id, name, meal_type, total_calories, total_carbs, total_protein, total_fat) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id,))
+        cursor.execute("INSERT INTO recipes (user_id, name, meal_type, total_calories, total_carbs, total_protein, total_fat) VALUES (?, ?, ?, ?, ?, ?, ?)", (user_id, recipe_name, "desayuno", total_calories, total_carbs, total_protein, total_fat))
+        recipe_id = cursor.lastrowid
         db.commit()
+
+        for ingredient_id, quantity in zip(selected_ingredients, quantities):
+            cursor.execute("INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity) VALUES (?, ?, ?)", (recipe_id, ingredient_id, quantity))
+        db.commit()
+
+        print("POST formulario create_recipe")
+        return redirect(url_for('recipes'))
+    
+    
+
+
+@app.route("/recipes")
+def recipes():
+
+    userName = session['user_name']
+    
+
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT id, name FROM ingredients")
+    ingredients = cursor.fetchall()
+    print(cursor.fetchall())
+
+    if not ingredients:
+        print("No ingredients found in the database.")
+
+    return render_template('recipes.html', ingredients=ingredients, user=userName)
 
 if __name__ == '__main__':
     app.run(debug=True)
